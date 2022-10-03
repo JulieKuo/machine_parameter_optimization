@@ -1,0 +1,5 @@
+prog/run/*
+data/clean/*
+data/init/*
+data/raw/*/*/*/*.csv
+chart/*
