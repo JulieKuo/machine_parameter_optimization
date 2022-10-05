@@ -218,10 +218,11 @@ class Train():
 
         pred1 = pred1.detach().numpy()
         y1 = y1.detach().numpy()
-        MSE = mean_squared_error(pred1, y1)
+        MSE = mean_squared_error(y1, pred1)
         RMSE = MSE ** (1/2)
-        MAPE = mean_absolute_percentage_error(pred1, y1)
-        R2 = r2_score(pred1, y1)
+        MAPE = mean_absolute_percentage_error(y1, pred1)
+        # SMAPE = (abs(y1 - pred1) / ((abs(y1) + abs(pred1)) / 2)).mean()
+        R2 = r2_score(y1, pred1)
         
 
         return MSE, RMSE, MAPE, R2, pred1, y1
