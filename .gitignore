@@ -1,5 +1,12 @@
 prog/run/*
 data/clean/*
-data/raw/*/*/*/*.csv
-chart/*
-__pycache__
+data/init/*
+data/models/*
+data/predictions/*
+data/raw/*
+chart/
+__pycache__/
+
+!data/*/.gitkeep
+!data/raw/*.zip
+!data/clean/parser_result.json
