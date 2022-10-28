@@ -199,30 +199,31 @@ class Train():
 
 
     # 計算validate、test的損失函數，以及相關分數
-    def eval_score(self, dataloader, model, criterion, mode = "eval"):
-        losses = 0
-        pred1, y1 = torch.Tensor([]), torch.Tensor([])
-        for batch, (X, y) in enumerate(dataloader):
-            pred = model(X) # 預測
-            loss = criterion(pred, y) # 計算損失函數
-            losses += loss.item()
+    def eval_score(self, dataloader, model, criterion, mode = "eval"): 
+        with torch.no_grad():
+            losses = 0
+            pred1, y1 = torch.Tensor([]), torch.Tensor([])
+            for batch, (X, y) in enumerate(dataloader):
+                pred = model(X) # 預測
+                loss = criterion(pred, y) # 計算損失函數
+                losses += loss.item()
 
-            pred1 = torch.concat([pred1, pred])
-            y1 = torch.concat([y1, y])
+                pred1 = torch.concat([pred1, pred])
+                y1 = torch.concat([y1, y])
 
-        losses /= (batch + 1)
+            losses /= (batch + 1)
 
-        if mode == "train":
-            return losses
-            
+            if mode == "train":
+                return losses
+                
 
-        pred1 = pred1.detach().numpy()
-        y1 = y1.detach().numpy()
-        MSE = mean_squared_error(y1, pred1)
-        RMSE = MSE ** (1/2)
-        MAPE = mean_absolute_percentage_error(y1, pred1)
-        # SMAPE = (abs(y1 - pred1) / ((abs(y1) + abs(pred1)) / 2)).mean()
-        R2 = r2_score(y1, pred1)
+            pred1 = pred1.detach().numpy()
+            y1 = y1.detach().numpy()
+            MSE = mean_squared_error(y1, pred1)
+            RMSE = MSE ** (1/2)
+            MAPE = mean_absolute_percentage_error(y1, pred1)
+            # SMAPE = (abs(y1 - pred1) / ((abs(y1) + abs(pred1)) / 2)).mean()
+            R2 = r2_score(y1, pred1)
         
 
         return MSE, RMSE, MAPE, R2, pred1, y1

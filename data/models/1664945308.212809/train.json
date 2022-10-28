@@ -1,1 +1,0 @@
-{"MSE": {"Train": 0.9561, "Validation": 1.2135, "Test": 1.369}, "RMSE": {"Train": 0.9778, "Validation": 1.1016, "Test": 1.17}, "MAPE": {"Train": 0.0119, "Validation": 0.0133, "Test": 0.014}, "SMAPE": {"Train": 0.0115, "Validation": 0.0129, "Test": 0.0134}, "R2": {"Train": 0.8915, "Validation": 0.865, "Test": 0.8551}, "COUNT": {"Train": 11923, "Validation": 5111, "Test": 4259}}
