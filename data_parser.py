@@ -12,6 +12,7 @@ class Parser():
             '每小時生產量': 'Hourly_Production',
             '清水總量': 'Total_water',
             '卷取掃描架定量測量值': 'Quantitative_measurement_of_coiling_scan_frame',
+            '乾強使用量': 'dry_strength_use',
             '#1透平機電機側壓力': '#1_Turbine_Motor_Side_Pressure',
             '#1透平機自由側壓力': '#1_Turbine_Free_Side_Pressure',
             '#1透平機負壓': '#1_Turbine_Negative_Pressure',
@@ -38,16 +39,19 @@ class Parser():
             '#4透平機負壓.1': '#4_Turbine_Negative_Pressure.1',
             '#4透平機主馬達電流': '#4_Turbine_Main_Motor_Current',
             '#4真空泵電機側振動': '#4_Vacuum_Pump_Motor_Side_Vibration',
-            '#4真空泵自由側振動': '#4_Vacuum_Pump_Free_Side_Vibration'
+            '#4真空泵自由側振動': '#4_Vacuum_Pump_Free_Side_Vibration',
+            'flow nukp': 'flow_nukp',
+            'headbox feed fan pump': 'headbox_feed_fan_pump',
             }
 
 
         self.form_check = {
-            "TG0802.csv": ['date', 'time', '頓紙用氣', '每小時生產量', '清水總量', '卷取掃描架定量測量值'],
+            "TG0802.csv": ['date', 'time', '頓紙用氣', '每小時生產量', '清水總量', '卷取掃描架定量測量值', '乾強使用量'],
             "TG0806.csv": ['date', 'time', '#1透平機電機側壓力', '#1透平機自由側壓力', '#1透平機負壓', '#1透平機負壓.1', '#1透平機主馬達電流', '#1真空泵電機側振動', '#1真空泵自由側振動'],
             "TG0807.csv": ['date', 'time', '#2透平機電機側壓力', '#2透平機自由側壓力', '#2透平機負壓', '#2透平機負壓.1', '#2透平機主馬達電流', '#2真空泵電機側振動', '#2真空泵自由側振動'],
             "TG0808.csv": ['date', 'time', '#3透平機電機側壓力', '#3透平機自由側壓力', '#3透平機負壓', '#3透平機負壓.1', '#3透平機主馬達電流', '#3真空泵電機側振動', '#3真空泵自由側振動'],
             "TG0809.csv": ['date', 'time', '#4透平機自由側壓力', '#4透平機負壓', '#4透平機負壓.1', '#4透平機主馬達電流', '#4真空泵電機側振動', '#4真空泵自由側振動'],
+            "TG0811.csv": ['date', 'time', 'flow nukp', 'headbox feed fan pump'],
         }
 
 
@@ -65,14 +69,18 @@ class Parser():
                             path = os.path.join(temp_path, dirs1, dirs2, dirs3, file)
                             df1 = pd.read_csv(path, encoding = "big5", header = 5)
 
+
+                            # clean file
                             try:
-                                # clean file
                                 if file.startswith('TG0802'):
-                                    df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8]]
+                                    df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9]]
+                                    df1 = df1.rename(columns = {"Unnamed: 9": "乾強使用量"})
                                 elif file.startswith('TG0806'):
                                     df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9, 10, 11]]
                                 elif file.startswith('TG0809'):
                                     df1 = df1.iloc[7:, [2, 3, 5, 7, 8, 9, 11, 12]]
+                                elif file.startswith('TG0811'):
+                                    df1 = df1.iloc[7:, [2, 3, -2, -1]]
                                 else:
                                     df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9, 11, 12]]
                             except:
@@ -86,10 +94,11 @@ class Parser():
 
                                 with open(os.path.join(clean_path, "parser_result.json"), 'w', newline='') as file:
                                     json.dump(result, file)
-                                
 
                                 return
                             
+
+                            # check if file is empty
                             if df1.empty:
                                 logging.error(f"Parser stopped. {os.path.join(dirs1, dirs2, dirs3, file)} is an empty file.")
 
@@ -105,6 +114,7 @@ class Parser():
                                 return
 
 
+                            # check columns name
                             df1 = df1.rename(columns = {"Unnamed: 2": "date", "Unnamed: 3": "time"})
                             try:
                                 df1 = df1[self.form_check[file]]
@@ -119,7 +129,6 @@ class Parser():
 
                                 with open(os.path.join(clean_path, "parser_result.json"), 'w', newline='') as file:
                                     json.dump(result, file)
-                                
 
                                 return
 

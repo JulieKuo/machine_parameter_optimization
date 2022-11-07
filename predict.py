@@ -27,10 +27,10 @@ class Predict():
 
 
         class Model(nn.Module):
-            def __init__(self):
+            def __init__(self, input_size):
                 super().__init__()
                 self.net  = nn.Sequential(
-                    nn.Linear(27, 32),
+                    nn.Linear(input_size, 32),
                     nn.LeakyReLU(),
                     nn.BatchNorm1d(32),
                     nn.Linear(32, 32),
@@ -51,7 +51,7 @@ class Predict():
         self.scaler = pickle.load(open(f'{self.model_detail}/scaler.pkl','rb'))
         self.df40_range = pd.read_csv(f"{self.model_detail}/output40.csv")
 
-        self.model = Model()
+        self.model = Model(input_size = len(self.features))
         self.model.load_state_dict(torch.load(f"{self.model_detail}/nn_weights.pt")) # 更改model權重
         self.model.eval()
 
@@ -65,6 +65,10 @@ class Predict():
         self.target1 = input_data[self.target]["init"]
 
         input_data1 = pd.DataFrame(input_data)
+
+        #乾強使用量、木漿流量、芯層泵啟停不可改變
+        input_data1.loc["fixed", ["dry_strength_use", "flow_nukp", "headbox_feed_fan_pump"]] = 1
+
         self.input_X = input_data1.loc[["init"], self.features]
         fixed_mask = input_data1.loc[["fixed"], self.features]
 

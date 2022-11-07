@@ -49,6 +49,7 @@ class Train():
                     df0 = pd.concat([df0, df1], ignore_index = True)
 
         df0["time"] = pd.to_datetime(df0["time"])
+        df0 = df0.dropna()
 
         return df0
 
@@ -72,20 +73,25 @@ class Train():
         df = df[[self.target] + self.features]
 
 
-        self.logging.info("{:-^80}".format(" Drop data leackage. "))
-        distance = [None]
-        for i in range(1, len(df)):
-            distance.append(np.linalg.norm(df.iloc[i].values - df.iloc[i-1].values))
-        df["distance"] = distance
+        self.logging.info("{:-^80}".format(" Slide window 10 min. "))
 
-        median = df["distance"].median()
-        df = df.query("distance >= @median")
-        df = df.drop("distance", axis = 1)
+        #補上缺失的時間段
+        time_ = pd.date_range(df.index[0], df.index[-1], freq = "min").to_frame(name = "time")
+        df = pd.merge(df, time_, left_index = True, right_index = True, how = "right")
+
+        #每十分鐘取平均
+        df = df.rolling(10).mean()
+        df = df.dropna()
+
+        # 刪除十分鐘內芯層泵啟停改變的sample
+        pump = [0, 2]
+        df = df.query("headbox_feed_fan_pump in @pump")
+
         self.logging.debug(f"The shape of the new data is {df.shape}. ")
 
 
         self.logging.info("{:-^80}".format(" Target analysis. "))
-        df = df[(df[self.target] > 21)] # 砍掉異常狀態
+        df = df[(df[self.target] > 10)] # 砍掉異常狀態
         self.logging.debug(f"The shape of the new data is {df.shape}. ")
 
 
@@ -343,7 +349,7 @@ class Train():
 
         # 抓出產出超過40的sample的所有feature之四分位數
         df1 = pd.read_csv(f"{self.model_detail}/preprocess.csv")
-        df40 = df1[(df1[self.target] >= 40)][self.features]
+        df40 = df1[(df1[self.target] >= 35)][self.features]
         df40_range = df40.describe().T[["25%", "50%", "75%", "max"]]
         df40_range = df40_range.reset_index()
         df40_range = df40_range.rename(columns = {"index": "feature"})
