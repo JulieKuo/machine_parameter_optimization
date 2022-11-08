@@ -347,18 +347,26 @@ class Train():
         torch.save(self.model.state_dict(), f"{self.model_detail}/nn_weights.pt") # 儲存權重
 
 
-        # 抓出產出超過40的sample的所有feature之四分位數
+        # 抓出各產出正負5的sample的所有feature之四分位數
+        range_path = f"{self.model_detail}/pred_range"
+        if not os.path.isdir(range_path):
+            os.makedirs(range_path)
+            
         df1 = pd.read_csv(f"{self.model_detail}/preprocess.csv")
-        df40 = df1[(df1[self.target] >= 35)][self.features]
-        df40_range = df40.describe().T[["25%", "50%", "75%", "max"]]
-        df40_range = df40_range.reset_index()
-        df40_range = df40_range.rename(columns = {"index": "feature"})
-        df40_range.to_csv(f"{self.model_detail}/output40.csv", index = False)
+
+        for i in range(10, 46):
+            df_range = df1[(df1[self.target] <= i+5) & (df1[self.target] >= i-5)]
+            df_range = df_range.describe().T[["min", "25%", "50%", "75%", "max"]]
+            df_range = df_range.reset_index()
+            df_range = df_range.rename(columns = {"index": "feature"})
+            
+            df_range.to_csv(f"{range_path}/{i}.csv", index = False)
 
 
         # 前端的預設參數
+        df40_range = pd.read_csv(f"{range_path}/40.csv")
         df40_range = df40_range.set_index("feature")
-        df40_range.columns = ["q1", "q2", "q3", "q4"]
+        df40_range.columns = ["q0", "q1", "q2", "q3", "q4"]
 
         with open(f'{self.model_path}/parameter.json', 'w') as f:
             json.dump(df40_range.T.to_dict(), f)

@@ -49,7 +49,6 @@ class Predict():
         self.skew_feat = pickle.load(open(f'{self.model_detail}/skew_feat.pkl','rb'))
         self.pt = pickle.load(open(f'{self.model_detail}/power_tf.pkl','rb'))
         self.scaler = pickle.load(open(f'{self.model_detail}/scaler.pkl','rb'))
-        self.df40_range = pd.read_csv(f"{self.model_detail}/output40.csv")
 
         self.model = Model(input_size = len(self.features))
         self.model.load_state_dict(torch.load(f"{self.model_detail}/nn_weights.pt")) # 更改model權重
@@ -81,20 +80,23 @@ class Predict():
         
 
         self.init_X = self.input_X.values.copy()
+        df_range = pd.read_csv(f"{self.model_detail}/pred_range/{self.target1}.csv")
+        self.df_range = df_range.iloc[1:].reset_index(drop = True)
+
         # # 查看輸入的參數是否在25% ~ 75%之間
         # for i, x in enumerate(init_X[0]):
-        #     if (x < self.df40_range.iloc[i, 1]) or (x > self.df40_range.iloc[i, 3]):
+        #     if (x < self.df_range.iloc[i, 2]) or (x > self.df_range.iloc[i, 4]):
         #         if (self.fixed_mask[i] == 0):
-        #             self.logging.debug(f"{i} : ({round(float(x), 4)}) not in {self.df40_range.iloc[i, 1].round(4)} ~ {self.df40_range.iloc[i, 3].round(4)}")
+        #             self.logging.debug(f"{i} : ({round(float(x), 4)}) not in {self.df_range.iloc[i, 2].round(4)} ~ {self.df_range.iloc[i, 4].round(4)}")
         #         else:
-        #             self.logging.debug(f"{i} : ({round(float(x), 4)}) not in {self.df40_range.iloc[i, 1].round(4)} ~ {self.df40_range.iloc[i, 3].round(4)},  but parameter is fixed.")
+        #             self.logging.debug(f"{i} : ({round(float(x), 4)}) not in {self.df_range.iloc[i, 2].round(4)} ~ {self.df_range.iloc[i, 4].round(4)},  but parameter is fixed.")
 
         
         # 如果輸入的參數不在25% ~ 75%之間，就用中位數取代
         self.logging.debug(f"init X: {self.init_X}")
         for j, x in enumerate(self.init_X[0]):
-            if ((x < self.df40_range.iloc[j, 1]) or (x > self.df40_range.iloc[j, 3])) and (self.fixed_mask[j] == 0):
-                self.init_X[0][j] = self.df40_range.iloc[j, 2]
+            if ((x < self.df_range.iloc[j, 2]) or (x > self.df_range.iloc[j, 4])) and (self.fixed_mask[j] == 0):
+                self.init_X[0][j] = self.df_range.iloc[j, 3]
         self.logging.debug(f"new X: {self.init_X}")
     
 
@@ -195,7 +197,7 @@ class Predict():
             new_X = (X[0] - grad).reshape(1, -1)
 
             # 確認新參數是否在25%~75%的分布範圍內，並將不在分布範圍內的新參數的梯度轉為0，此次不更新該參數
-            mask = [True if (new_x >= self.df40_range.iloc[j, 1]) and (new_x <= self.df40_range.iloc[j, 3]) else False for j, new_x in enumerate(new_X[0])]
+            mask = [True if (new_x >= self.df_range.iloc[j, 2]) and (new_x <= self.df_range.iloc[j, 4]) else False for j, new_x in enumerate(new_X[0])]
             # mask = torch.Tensor(mask)
             grad *= mask
 
