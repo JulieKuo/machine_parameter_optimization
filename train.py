@@ -357,6 +357,10 @@ class Train():
         for i in range(10, 46):
             df_range = df1[(df1[self.target] <= i+5) & (df1[self.target] >= i-5)]
             df_range = df_range.describe().T[["min", "25%", "50%", "75%", "max"]]
+
+            vibration = [i for i in df_range.index if "Motor_Side_Vibration" in i]
+            df_range.loc[vibration] = df_range.loc[vibration].applymap(lambda X: 20 if X > 20 else X) # 震動值不可大於20
+            
             df_range = df_range.reset_index()
             df_range = df_range.rename(columns = {"index": "feature"})
             
