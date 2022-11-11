@@ -77,12 +77,14 @@ class Parser():
                                     df1 = df1.rename(columns = {"Unnamed: 9": "乾強使用量"})
                                 elif file.startswith('TG0806'):
                                     df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9, 10, 11]]
+                                elif file.startswith('TG0807') or file.startswith('TG0808'):
+                                    df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9, 11, 12]]
                                 elif file.startswith('TG0809'):
                                     df1 = df1.iloc[7:, [2, 3, 5, 7, 8, 9, 11, 12]]
                                 elif file.startswith('TG0811'):
                                     df1 = df1.iloc[7:, [2, 3, -2, -1]]
                                 else:
-                                    df1 = df1.iloc[7:, [2, 3, 5, 6, 7, 8, 9, 11, 12]]
+                                    continue
                             except:
                                 logging.error(f"Parser stopped. The format of {os.path.join(dirs1, dirs2, dirs3, file)} is wrong.")
 
