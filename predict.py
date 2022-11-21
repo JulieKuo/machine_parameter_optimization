@@ -64,9 +64,11 @@ class Predict():
         self.target1 = input_data[self.target]["init"]
 
         input_data1 = pd.DataFrame(input_data)
+        input_data1 = input_data1.astype(float)
 
         #乾強使用量、木漿流量、芯層泵啟停不可改變
         input_data1.loc["fixed", ["dry_strength_use", "flow_nukp", "headbox_feed_fan_pump"]] = 1
+        input_data1.loc["init", "headbox_feed_fan_pump"] = 2 if input_data1.loc["init", "headbox_feed_fan_pump"] == 1 else 0
 
         self.input_X = input_data1.loc[["init"], self.features]
         fixed_mask = input_data1.loc[["fixed"], self.features]
@@ -80,7 +82,15 @@ class Predict():
         
 
         self.init_X = self.input_X.values.copy()
-        df_range = pd.read_csv(f"{self.model_detail}/pred_range/{self.target1}.csv")
+
+        if self.target1 >= 45:
+            range_target = 45
+        elif  self.target1 <= 10:
+            range_target = 10
+        else:
+            range_target = round(self.target1)
+
+        df_range = pd.read_csv(f"{self.model_detail}/pred_range/{range_target}.csv")
         self.df_range = df_range.iloc[1:].reset_index(drop = True)
 
         # # 查看輸入的參數是否在25% ~ 75%之間
