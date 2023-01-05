@@ -1,1 +1,82 @@
-{"2022-10": {"21": {"count": 1033, "Hourly_Production_Avg": 36.21994191674734}, "22": {"count": 1439, "Hourly_Production_Avg": 34.125920778318275}, "23": {"count": 1439, "Hourly_Production_Avg": 40.308964558721335}, "24": {"count": 1170, "Hourly_Production_Avg": 43.31606837606837}, "25": {"count": 1439, "Hourly_Production_Avg": 42.11945795691453}, "26": {"count": 1134, "Hourly_Production_Avg": 44.94876543209877}, "27": {"count": 1439, "Hourly_Production_Avg": 42.18075052119527}, "28": {"count": 1023, "Hourly_Production_Avg": 38.647605083088955}, "29": {"count": 1130, "Hourly_Production_Avg": 42.340973451327436}, "30": {"count": 1439, "Hourly_Production_Avg": 38.136553161918}, "31": {"count": 1439, "Hourly_Production_Avg": 30.64197359277276}}, "2022-11": {"01": {"count": 1092, "Hourly_Production_Avg": 27.738644688644687}, "02": {"count": 1439, "Hourly_Production_Avg": 35.595899930507294}, "03": {"count": 1439, "Hourly_Production_Avg": 38.534607366226545}, "04": {"count": 1439, "Hourly_Production_Avg": 34.42724113968033}, "05": {"count": 727, "Hourly_Production_Avg": 32.979917469050896}, "06": {"count": 1439, "Hourly_Production_Avg": 39.99179986101459}, "08": {"count": 1115, "Hourly_Production_Avg": 41.37946188340807}, "09": {"count": 1439, "Hourly_Production_Avg": 42.59117442668519}}}
+{
+  "2022-10": {
+    "21": {
+      "count": 1033,
+      "Hourly_Production_Avg": 36.21994191674734
+    },
+    "22": {
+      "count": 1439,
+      "Hourly_Production_Avg": 34.125920778318275
+    },
+    "23": {
+      "count": 1439,
+      "Hourly_Production_Avg": 40.308964558721335
+    },
+    "24": {
+      "count": 1170,
+      "Hourly_Production_Avg": 43.31606837606837
+    },
+    "25": {
+      "count": 1439,
+      "Hourly_Production_Avg": 42.11945795691453
+    },
+    "26": {
+      "count": 1134,
+      "Hourly_Production_Avg": 44.94876543209877
+    },
+    "27": {
+      "count": 1439,
+      "Hourly_Production_Avg": 42.18075052119527
+    },
+    "28": {
+      "count": 1023,
+      "Hourly_Production_Avg": 38.647605083088955
+    },
+    "29": {
+      "count": 1130,
+      "Hourly_Production_Avg": 42.340973451327436
+    },
+    "30": {
+      "count": 1439,
+      "Hourly_Production_Avg": 38.136553161918
+    },
+    "31": {
+      "count": 1439,
+      "Hourly_Production_Avg": 30.64197359277276
+    }
+  },
+  "2022-11": {
+    "01": {
+      "count": 1092,
+      "Hourly_Production_Avg": 27.738644688644687
+    },
+    "02": {
+      "count": 1439,
+      "Hourly_Production_Avg": 35.595899930507294
+    },
+    "03": {
+      "count": 1439,
+      "Hourly_Production_Avg": 38.534607366226545
+    },
+    "04": {
+      "count": 1439,
+      "Hourly_Production_Avg": 34.42724113968033
+    },
+    "05": {
+      "count": 727,
+      "Hourly_Production_Avg": 32.979917469050896
+    },
+    "06": {
+      "count": 1439,
+      "Hourly_Production_Avg": 39.99179986101459
+    },
+    "08": {
+      "count": 1115,
+      "Hourly_Production_Avg": 41.37946188340807
+    },
+    "09": {
+      "count": 1439,
+      "Hourly_Production_Avg": 42.59117442668519
+    }
+  }
+}
