@@ -80,6 +80,7 @@ class Train():
         df = pd.merge(df, time_, left_index = True, right_index = True, how = "right")
 
         #每十分鐘取平均
+        df = df.drop("time", axis = 1)
         df = df.rolling(10).mean()
         df = df.dropna()
 
