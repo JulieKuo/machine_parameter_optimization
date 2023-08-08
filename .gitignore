@@ -1,12 +1,4 @@
-prog/run/*
-data/clean/*
-data/init/*
-data/models/*
-data/predictions/*
-data/raw/*
+data/
 chart/
+prog/
 __pycache__/
-
-!data/*/.gitkeep
-!data/raw/*.zip
-!data/clean/parser_result.json
